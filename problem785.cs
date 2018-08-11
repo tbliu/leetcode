@@ -1,35 +1,36 @@
 public class Solution {
     public bool IsBipartite(int[][] graph) {
-        HashSet<int> s1 = new HashSet<int>();
-        HashSet<int> s2 = new HashSet<int>();
-        bool bipartite = Search(graph, s1, s2, 0);
+        // Colors will be 0 and 1. Uncolored nodes will be -1
+        int[] colors = new int[graph.Length];
+        for (int i = 0; i < colors.Length; i++) {
+            colors[i] = -1;
+        }
         for (int node = 0; node < graph.Length; node++) {
-            if (!s1.Contains(node) && !s2.Contains(node)) {
-                bipartite = bipartite && Search(graph, s1, s2, node);
+            if (colors[node] == -1) { // New connected component
+                colors[node] = 0;
+                if (!Search(graph, colors, node)) {
+                    return false;
+                }
             }
         }
-        return bipartite;
+        return true;
     }
 
-    private bool Search(int[][] graph, HashSet<int> s1, HashSet<int> s2, int currNode) {
-        if (currNode >= graph.Length || s1.Contains(currNode) || s2.Contains(currNode)) {
-            return true;
-        }
+    private bool Search(int[][] graph, int[] colors, int currNode) {
         int[] neighbors = graph[currNode];
-        s1.Add(currNode);
-        bool bipartite = true;
+        int color = colors[currNode];
         foreach (int neighbor in neighbors) {
-            if (s1.Contains(neighbor)) {
+            if (colors[neighbor] == color) {
                 return false;
             }
-            if (s2.Contains(neighbor)) {
-                continue;
-            }
-            bipartite = bipartite && Search(graph, s2, s1, neighbor);
-            if (!bipartite) {
-                return bipartite;
+
+            if (colors[neighbor] == -1) {
+                colors[neighbor] = 1 - color;
+                if (!Search(graph, colors, neighbor)) {
+                    return false;
+                }
             }
         }
-        return bipartite;
+        return true;
     }
 }
