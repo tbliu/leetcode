@@ -16,9 +16,6 @@ public class Solution {
             return true;
         }
         int[] neighbors = graph[currNode];
-        if (neighbors.Length == 0) {
-            return Search(graph, s1, s2, currNode + 1);
-        }
         s1.Add(currNode);
         bool bipartite = true;
         foreach (int neighbor in neighbors) {
