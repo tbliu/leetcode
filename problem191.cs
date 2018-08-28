@@ -1,12 +1,10 @@
 public class Solution {
     public int HammingWeight(uint n) {
-        var weight = 0;
+        var count = 0;
         while (n > 0) {
-            if (n % 2 != 0) {
-                weight++;
-            }
-            n /= 2;
+            n &= (n - 1);
+            count++;
         }
-        return weight;
+        return count;
     }
 }
